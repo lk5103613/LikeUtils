@@ -10,14 +10,14 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 @SuppressLint("NewApi")
-public class MyNetworkUtil {
+public class NetworkUtil {
 
 	private RequestQueue mQueue;
 	private ImageLoader mLoader;
 	private static Context mContext;
-	private static MyNetworkUtil mInstance;
+	private static NetworkUtil mInstance;
 
-	private MyNetworkUtil(Context context) {
+	private NetworkUtil(Context context) {
 		mContext = context.getApplicationContext();
 		mQueue = getRequestQueue();
 
@@ -52,9 +52,9 @@ public class MyNetworkUtil {
 		return mLoader;
 	}
 
-	public static synchronized MyNetworkUtil getInstance(Context context) {
+	public static synchronized NetworkUtil getInstance(Context context) {
 		if (mInstance == null) {
-			mInstance = new MyNetworkUtil(context.getApplicationContext());
+			mInstance = new NetworkUtil(context.getApplicationContext());
 		}
 		return mInstance;
 	}

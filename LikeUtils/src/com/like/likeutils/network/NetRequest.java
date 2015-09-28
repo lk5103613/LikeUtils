@@ -7,16 +7,16 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.StringRequest;
 
-public class  MyRequest extends StringRequest {
+public class  NetRequest extends StringRequest {
 	
 	private Map<String, String> mParams;
 	
-	public MyRequest(int method, String url, Listener<String> listener,
+	public NetRequest(int method, String url, Listener<String> listener,
 			ErrorListener errorListener) {
 		super(method, url, listener, errorListener);
 	}
 	
-	public MyRequest(int method, String url, Map<String, String> params, 
+	public NetRequest(int method, String url, Map<String, String> params, 
 			Listener<String> listener, ErrorListener errorListener) {
 		super(method, url, listener, errorListener);
 		this.mParams = params;

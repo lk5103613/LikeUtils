@@ -15,7 +15,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.like.likeutils.R;
 
 public class DataFetcherBase {
-	
+	private boolean mIsDebug = false;
 	private int mDefaultImgResId;
 	private int mErrorImgResId;
 	private ErrorListener mDefaultErrorListener;
@@ -26,8 +26,8 @@ public class DataFetcherBase {
 	
 	protected DataFetcherBase(Context context) {
 		this.mContext = context;
-		mQueue = MyNetworkUtil.getInstance(context).getRequestQueue();
-		mImgLoader = MyNetworkUtil.getInstance(context).getImageLoader();
+		mQueue = NetworkUtil.getInstance(context).getRequestQueue();
+		mImgLoader = NetworkUtil.getInstance(context).getImageLoader();
 		mDefaultImgResId = R.drawable.default_img;
 		mErrorImgResId = R.drawable.default_img;
 		mDefaultErrorListener = new ErrorListener() {
@@ -61,64 +61,79 @@ public class DataFetcherBase {
 		this.mDefaultErrorListener = errorListener;
 	}
 	
-	protected void fetchData(int method, String url, Map<String, String> params, Listener<String> listener, ErrorListener errorListener) {
-		url = NetParamGenerator.getUrlWithoutParams(url);
-		MyRequest request = new MyRequest(method, url, params, listener, errorListener);
-		mQueue.add(request);
+	public void setDebug(boolean isDebug) {
+		this.mIsDebug = isDebug;
 	}
 	
-	protected <T> void fetchData (int method, String url, Map<String, String> params, boolean isGeneric, Class<T> clazz,
-			Listener<T> listener, ErrorListener errorListener) {
+	private Listener<String> getProxyListener(int method, String url, Listener<String> listener, Map<String, String> params) {
+		Listener<String> proxyListener = null;
+		if(mIsDebug) {
+			proxyListener = new DebugListener(method, listener, url, params);
+		} else {
+			proxyListener = listener;
+		}
+		return proxyListener;
+	}
+	private Listener<String> getProxyListener(int method, String url, Listener<String> listener, String... params) {
+		Listener<String> proxyListener = null;
+		if(mIsDebug) {
+			proxyListener = new DebugListener(method, listener, url, params);
+		} else {
+			proxyListener = listener;
+		}
+		return proxyListener;
+	}
+	
+	protected void fetchData(int method, String url, Map<String, String> params, Listener<String> listener, ErrorListener errorListener) {
 		url = NetParamGenerator.getUrlWithoutParams(url);
-		MyConvertRequest<T> request = new MyConvertRequest<T>(method, url, isGeneric, clazz, listener, errorListener);
+		Listener<String> proxyListener = getProxyListener(method, url, listener, params);
+		NetRequest request = new NetRequest(method, url, params, proxyListener, errorListener);
 		mQueue.add(request);
 	}
 	
 	protected void fetchData(String url, Map<String, String> params, Listener<String> listener) {
 		url = NetParamGenerator.getUrlWithoutParams(url);
-		MyRequest request = new MyRequest(Method.POST, url, params, listener, mDefaultErrorListener);
+		Listener<String> proxyListener = getProxyListener(Method.POST, url, listener, params);;
+		NetRequest request = new NetRequest(Method.POST, url, params, proxyListener, mDefaultErrorListener);
 		mQueue.add(request);
 	}
 	
-	protected <T> void fetchData(String url, Map<String, String> params, boolean isGeneric, Class<T> clazz, Listener<T> listener) {
+	protected void fetchData(String url, Map<String, String> params, Listener<String> listener, ErrorListener errorListener) {
 		url = NetParamGenerator.getUrlWithoutParams(url);
-		MyConvertRequest<T> request = new MyConvertRequest<T>(Method.POST, url, isGeneric, clazz, listener, mDefaultErrorListener);
+		Listener<String> proxyListener = getProxyListener(Method.POST, url, listener, params);;
+		NetRequest request = new NetRequest(Method.POST, url, params, proxyListener, errorListener);
 		mQueue.add(request);
 	}
 	
 	protected void fetchData(int method, String url, Listener<String> listener, ErrorListener errorListener, String...params) {
-		if(params.length != 0)
+		if(params != null && params.length != 0)
 			url = NetParamGenerator.getUrlWithParams(url, params);
-		MyRequest request = new MyRequest(method, url, listener, errorListener);
-		mQueue.add(request);
-	}
-	
-	protected <T> void fetchData(int method, String url, boolean isGeneric, Class<T> clazz, Listener<T> listener, ErrorListener errorListener, String...params) {
-		if(params.length != 0)
-			url = NetParamGenerator.getUrlWithParams(url, params);
-		MyConvertRequest<T> request = new MyConvertRequest<T>(method, url, isGeneric, clazz, listener, errorListener);
+		Listener<String> proxyListener = getProxyListener(method, url, listener, params);;
+		NetRequest request = new NetRequest(method, url, proxyListener, errorListener);
 		mQueue.add(request);
 	}
 	
 	protected void fetchData(String url, Listener<String> listener, String...params) {
 		if(params.length != 0)
 			url = NetParamGenerator.getUrlWithParams(url, params);
-		MyRequest request = new MyRequest(Method.GET, url, listener, mDefaultErrorListener);
+		Listener<String> proxyListener = getProxyListener(Method.GET, url, listener, params);;
+		NetRequest request = new NetRequest(Method.GET, url, proxyListener, mDefaultErrorListener);
 		mQueue.add(request);
 	}
 	
-	protected <T> void fetchData(String url, boolean isGeneric, Class<T> clazz, Listener<T> listener, String...params) {
+	protected void fetchData(String url, Listener<String> listener, ErrorListener errorListener, String...params) {
 		if(params.length != 0)
 			url = NetParamGenerator.getUrlWithParams(url, params);
-		MyConvertRequest<T> request = new MyConvertRequest<T>(url, isGeneric, clazz, listener, mDefaultErrorListener);
+		Listener<String> proxyListener = getProxyListener(Method.GET, url, listener, params);;
+		NetRequest request = new NetRequest(Method.GET, url, proxyListener, errorListener);
 		mQueue.add(request);
 	}
 	
-	public void fetchImg(String imgPath, ImageView img, int defaultImgResId, int errorImgResId) {
+	public void getImg(String imgPath, ImageView img, int defaultImgResId, int errorImgResId) {
 		mImgLoader.get(imgPath, ImageLoader.getImageListener(img, defaultImgResId, errorImgResId));
 	}
 	
-	public void fetchImg(String imgPath, ImageView img) {
+	public void getImg(String imgPath, ImageView img) {
 		mImgLoader.get(imgPath, ImageLoader.getImageListener(img, mDefaultImgResId, mErrorImgResId));
 	}
 

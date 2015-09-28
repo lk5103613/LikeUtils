@@ -18,6 +18,14 @@ public class NetParamGenerator {
 		return url;
 	}
 	
+	public static String getDescription(String url) {
+		String[] splitArr = url.split("//");
+		if(splitArr.length < 2)
+			return null;
+		return splitArr[splitArr.length - 1];
+		
+	}
+	
 	public static Map<String, String> getMapParams(String url, String ...params) {
 		url = url.substring(url.indexOf("?") + 1);
 		String[] keyValues = url.split("=|&");
