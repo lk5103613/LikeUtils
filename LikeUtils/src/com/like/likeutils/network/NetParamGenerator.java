@@ -6,7 +6,7 @@ import java.util.Map;
 public class NetParamGenerator {
 	
 	public static String getUrlWithParams(String url, String ...params) {
-		String result = url;
+		String result = url.substring(0, url.lastIndexOf("//"));
 		for(int i=params.length; i>=1; i--) {
 			result = result.replace("%" + i, params[i - 1]);
 		}
@@ -20,7 +20,7 @@ public class NetParamGenerator {
 	
 	public static String getDescription(String url) {
 		String[] splitArr = url.split("//");
-		if(splitArr.length < 2)
+		if(splitArr.length < 3)
 			return null;
 		return splitArr[splitArr.length - 1];
 		

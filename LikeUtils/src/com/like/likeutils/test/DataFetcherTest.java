@@ -27,6 +27,4 @@ public class DataFetcherTest extends DataFetcherBase {
     public void fetchMsList(boolean test) {
     }
     
-    
-    
 }

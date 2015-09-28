@@ -85,47 +85,44 @@ public class DataFetcherBase {
 	}
 	
 	protected void fetchData(int method, String url, Map<String, String> params, Listener<String> listener, ErrorListener errorListener) {
-		url = NetParamGenerator.getUrlWithoutParams(url);
+		String targetUrl = NetParamGenerator.getUrlWithoutParams(url);
 		Listener<String> proxyListener = getProxyListener(method, url, listener, params);
-		NetRequest request = new NetRequest(method, url, params, proxyListener, errorListener);
+		NetRequest request = new NetRequest(method, targetUrl, params, proxyListener, errorListener);
 		mQueue.add(request);
 	}
 	
 	protected void fetchData(String url, Map<String, String> params, Listener<String> listener) {
-		url = NetParamGenerator.getUrlWithoutParams(url);
-		Listener<String> proxyListener = getProxyListener(Method.POST, url, listener, params);;
-		NetRequest request = new NetRequest(Method.POST, url, params, proxyListener, mDefaultErrorListener);
+		String targetUrl = NetParamGenerator.getUrlWithoutParams(url);
+		Listener<String> proxyListener = getProxyListener(Method.POST, url, listener, params);
+		NetRequest request = new NetRequest(Method.POST, targetUrl, params, proxyListener, mDefaultErrorListener);
 		mQueue.add(request);
 	}
 	
 	protected void fetchData(String url, Map<String, String> params, Listener<String> listener, ErrorListener errorListener) {
-		url = NetParamGenerator.getUrlWithoutParams(url);
-		Listener<String> proxyListener = getProxyListener(Method.POST, url, listener, params);;
-		NetRequest request = new NetRequest(Method.POST, url, params, proxyListener, errorListener);
+		String targetUrl = NetParamGenerator.getUrlWithoutParams(url);
+		Listener<String> proxyListener = getProxyListener(Method.POST, url, listener, params);
+		NetRequest request = new NetRequest(Method.POST, targetUrl, params, proxyListener, errorListener);
 		mQueue.add(request);
 	}
 	
 	protected void fetchData(int method, String url, Listener<String> listener, ErrorListener errorListener, String...params) {
-		if(params != null && params.length != 0)
-			url = NetParamGenerator.getUrlWithParams(url, params);
+		String targetUrl = NetParamGenerator.getUrlWithParams(url, params);
 		Listener<String> proxyListener = getProxyListener(method, url, listener, params);;
-		NetRequest request = new NetRequest(method, url, proxyListener, errorListener);
+		NetRequest request = new NetRequest(method, targetUrl, proxyListener, errorListener);
 		mQueue.add(request);
 	}
 	
 	protected void fetchData(String url, Listener<String> listener, String...params) {
-		if(params.length != 0)
-			url = NetParamGenerator.getUrlWithParams(url, params);
-		Listener<String> proxyListener = getProxyListener(Method.GET, url, listener, params);;
-		NetRequest request = new NetRequest(Method.GET, url, proxyListener, mDefaultErrorListener);
+		String targetUrl = NetParamGenerator.getUrlWithParams(url, params);
+		Listener<String> proxyListener = getProxyListener(Method.GET, url, listener, params);
+		NetRequest request = new NetRequest(Method.GET, targetUrl, proxyListener, mDefaultErrorListener);
 		mQueue.add(request);
 	}
 	
 	protected void fetchData(String url, Listener<String> listener, ErrorListener errorListener, String...params) {
-		if(params.length != 0)
-			url = NetParamGenerator.getUrlWithParams(url, params);
-		Listener<String> proxyListener = getProxyListener(Method.GET, url, listener, params);;
-		NetRequest request = new NetRequest(Method.GET, url, proxyListener, errorListener);
+		String targetUrl = NetParamGenerator.getUrlWithParams(url, params);
+		Listener<String> proxyListener = getProxyListener(Method.GET, url, listener, params);
+		NetRequest request = new NetRequest(Method.GET, targetUrl, proxyListener, errorListener);
 		mQueue.add(request);
 	}
 	
