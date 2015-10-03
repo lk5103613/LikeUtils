@@ -58,8 +58,10 @@ public class DebugListener implements Listener<String> {
 		String methodOut = "METHOD : " + method + "\r\n";
 		String urlOut =    "URL    : " + mBaseUrl + "\r\n";
 		StringBuilder paramsOut = new StringBuilder("PARAMS : \r\n");
-		for(String key : mParams.keySet()) {
-			paramsOut.append("         " + key + " = " + mParams.get(key) + "\r\n");
+		if(mParams != null) {
+			for(String key : mParams.keySet()) {
+				paramsOut.append("         " + key + " = " + mParams.get(key) + "\r\n");
+			}
 		}
 		String dataOut =   "DATA   : " + response + "\r\n";
 		String endOut =    "============ END ============";

@@ -126,6 +126,20 @@ public class DataFetcherBase {
 		mQueue.add(request);
 	}
 	
+	protected void fetchData(String url, Object obj, Listener<String> listener, ErrorListener errorListener) {
+		String targetUrl = NetParamGenerator.getUrlWithoutParams(url);
+		Listener<String> proxyListener = getProxyListener(Method.POST, url, listener);
+		NetRequest request = new NetRequest(Method.POST, targetUrl, obj, proxyListener, errorListener);
+		mQueue.add(request);
+	}
+	
+	protected void fetchData(int method, String url, Object obj, Listener<String> listener, ErrorListener errorListener) {
+		String targetUrl = NetParamGenerator.getUrlWithoutParams(url);
+		Listener<String> proxyListener = getProxyListener(method, url, listener);
+		NetRequest request = new NetRequest(method, targetUrl, obj, proxyListener, errorListener);
+		mQueue.add(request);
+	}
+	
 	public void getImg(String imgPath, ImageView img, int defaultImgResId, int errorImgResId) {
 		mImgLoader.get(imgPath, ImageLoader.getImageListener(img, defaultImgResId, errorImgResId));
 	}

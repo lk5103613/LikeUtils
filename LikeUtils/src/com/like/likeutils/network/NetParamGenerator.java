@@ -14,6 +14,9 @@ public class NetParamGenerator {
 	}
 	
 	public static String getUrlWithoutParams(String url) {
+		int index = url.indexOf("?");
+		if(index < 0)
+			return url;
 		url = url.substring(0, url.indexOf("?"));
 		return url;
 	}
@@ -29,6 +32,8 @@ public class NetParamGenerator {
 	public static Map<String, String> getMapParams(String url, String ...params) {
 		url = url.substring(url.indexOf("?") + 1);
 		String[] keyValues = url.split("=|&");
+		if(keyValues.length <= 1)
+			return null;
 		for(int i=keyValues.length - 1; i>=0; i--) {
 			int index = (i+1)/2;
 			keyValues[i] = params[index - 1];
