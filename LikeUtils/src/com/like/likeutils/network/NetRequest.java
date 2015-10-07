@@ -13,6 +13,9 @@ public class  NetRequest extends StringRequest {
 	
 	private static final String PROTOCOL_CHARSET = "utf-8";
 	
+	private static final String PROTOCOL_CONTENT_TYPE =
+	        String.format("application/json; charset=%s", PROTOCOL_CHARSET);
+	
 	private Map<String, String> mParams;
 	private String mRequestBody;
 	
@@ -41,6 +44,12 @@ public class  NetRequest extends StringRequest {
             return null;
         } 
     }
+	
+	@Override
+	public String getBodyContentType() {
+		return PROTOCOL_CONTENT_TYPE;
+//		return super.getBodyContentType();
+	}
 	
 	@Override
 	protected Map<String, String> getParams() throws AuthFailureError {
